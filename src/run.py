@@ -9,12 +9,13 @@ from matplotlib import pyplot as plt
 
 
 if __name__ == "__main__":
-    # csv_file, visual_mode, image_paths = parse_arguments()
+    csv_file, visual_mode, image_paths = parse_arguments()
 
-    csv_file = "output.csv"
-    visual_mode = True
-    image_paths = ["../incision_couples/SA_20230222-130319_c1g5pmjim3m6_incision_crop_0.jpg", "../incision_couples/SA_20220620-102621_8ka1kmwpywxv_incision_crop_0.jpg"]
+    # csv_file = "output.csv"
+    # visual_mode = True
+    # image_paths = ["../incision_couples/SA_20230222-130319_c1g5pmjim3m6_incision_crop_0.jpg", "../incision_couples/SA_20220620-102621_8ka1kmwpywxv_incision_crop_0.jpg"]
 
+    image_paths = list(image_paths)
     model = load_model_SimpleCNN("../models/model_all_in_800.pth")
 
     images = []
