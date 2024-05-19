@@ -3,14 +3,13 @@ import csv
 from functions import parse_arguments, preprocess_and_cut_fcn, visualize
 from nns.Net import SimpleCNN, predict, load_model_SimpleCNN
 from skimage import io
-from matplotlib import pyplot as plt
-
 
 
 
 if __name__ == "__main__":
     csv_file, visual_mode, image_paths = parse_arguments()
 
+    ## možné spuštění
     # csv_file = "output.csv"
     # visual_mode = True
     # image_paths = ["../incision_couples/SA_20230222-130319_c1g5pmjim3m6_incision_crop_0.jpg", "../incision_couples/SA_20220620-102621_8ka1kmwpywxv_incision_crop_0.jpg"]
@@ -35,28 +34,6 @@ if __name__ == "__main__":
         n_stitches.append(num_stitches)
         if visual_mode:
             visualize(process, img, stitchable_class)
-            # plt.figure(figsize=(7, 4))
-            # plt.subplot(5, 1, 1)
-            # plt.title("původní obrázek")
-            # plt.imshow(img, cmap='gray')
-            #
-            # plt.subplot(512)
-            # plt.title("narovnaný a oříznutý (šedotón)")
-            # plt.imshow(process["img_cut_sides"], cmap='gray')
-            #
-            # plt.subplot(513)
-            # plt.title("segmentace (ne)stehů")
-            # plt.imshow(process["img_binary"], cmap='gray')
-            #
-            # plt.subplot(514)
-            # plt.title("maskování stehů")
-            # plt.imshow(process["img_binary_count"]*(1-process["img_cut_sides"]), cmap='gray')
-            #
-            # plt.subplot(515)
-            # plt.title("rozdělení na stehy")
-            # plt.imshow(process["img_gs_fragm"], cmap='gray')
-            #
-            # plt.show()
 
     data = []
     for i in range(len(n_stitches)):

@@ -1,5 +1,4 @@
 import sys
-
 import numpy as np
 from scipy import ndimage
 from skimage import exposure
@@ -75,14 +74,10 @@ def cut_sides(img_gs):
     vect = np.sum(img_bin, axis=0)
     arg1 = np.argmax(vect > 0)
     arg2 = len(vect) - np.argmax(vect[::-1] > 0)
-    # print(arg1)
-    # print(arg2)
 
     vect2 = np.sum(img_bin, axis=1)
     arg1_1 = np.argmax(vect2 > 0)
     arg2_1 = len(vect2) - np.argmax(vect2[::-1] > 0)
-    # print(arg1)
-    # print(arg2)
 
     img_sidecut = img_gs[:,arg1:arg2]
     return img_sidecut, img_bin, [arg1, arg2], [arg1_1, arg2_1]
@@ -112,8 +107,6 @@ def segmentate_1D(img_gs, procento=87):
     kernel_4 = np.array([kernel_4], dtype=np.uint8)
     kernel_5 = np.array([[0, 1, 0], [1, 1, 1], [0, 1, 0]], dtype=np.uint8)
 
-    # math morphology:
-    # if (np.sum(np.sum(img_binary))) != 0:
     try:
         img_binary = ndimage.binary_opening(img_binary, kernel_4, iterations=1)
         img_binary = ndimage.binary_closing(img_binary, kernel_2, iterations=1)
@@ -155,18 +148,12 @@ def xml_to_stitches(doc, index):
         #     continue
         try:
             for pline in doc["annotations"]["image"][index]["polyline"]:
-                # extract coodrinates
-                # print(pline)
-                # if type(pline) != 'dict' :
-                #     continue
-                # try:
                     if pline["@label"] == "Incision":
                         continue
                     pts = np.array([pt.split(",") for pt in pline["@points"].split(";")], dtype=float)
                     stitches.append(pts)
         except:
             print("image with index ", index, " is not usable")
-            # plt.plot(pts[:, 0], pts[:, 1])
 
     return stitches
 
@@ -214,15 +201,6 @@ def print_stitch_stats(width, height):
 
     plt.show()
 
-
-# import os
-# import xmltodict
-# from functions import horizontalize, cut_sides, segmentate_1D, differentiate, xml_to_stitches, print_stitch_stats
-# import numpy as np
-# from scipy import ndimage
-# import skimage.feature
-# import matplotlib.pyplot as plt
-# from PIL import Image
 
 def preprocess_and_cut_fcn(img):
 
@@ -333,9 +311,6 @@ def visualize(process, img, classes):
     ax.imshow(process["img_binary_count"] * (1 - process["img_cut_sides"]), cmap='gray')
     ax.axis('off')
 
-    # img_1 = process["img_gs_fragm"]
-    # if len(img_1.shape) == 2:
-    #     img_1 = np.stack((img_1,) * 3, axis=-1)
     pts = process["border_pts"]
 
     ax = fig.add_subplot(5, 1, 5)
@@ -351,32 +326,6 @@ def visualize(process, img, classes):
         ax.add_patch(rect)
     ax.axis('off')
     fig.suptitle('Vizualizace postupu a predikce', fontsize=16)
-
-    # plt.subplot(512)
-    # plt.title("narovnaný a oříznutý (šedotón)")
-    # plt.imshow(process["img_cut_sides"], cmap='gray')
-    #
-    # plt.subplot(513)
-    # plt.title("segmentace (ne)stehů")
-    # plt.imshow(process["img_binary"], cmap='gray')
-    #
-    # plt.subplot(514)
-    # plt.title("maskování (ne)stehů")
-    # plt.imshow(process["img_binary_count"] * (1 - process["img_cut_sides"]), cmap='gray')
-    #
-    # img_1 = process["img_gs_fragm"]
-    # if len(img_1.shape) == 2:
-    #     img_1 = np.stack((img_1,) * 3, axis=-1)
-    # pts = process["border_pts"]
-    #
-    # plt.subplot(515)
-    # plt.title("rozdělení na stehy")
-    # plt.imshow(process["img_gs_fragm"], cmap='gray')
-    # for i in range(classes):
-    #     rect = patches.Rectangle((pts[i]+1, 0, pts[i+1], len(img[:,0])), linewidth=2, edgecolor='r', facecolor='none')
-
-
-
 
     plt.show()
 

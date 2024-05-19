@@ -21,12 +21,9 @@ class CustomDataset(Dataset):
 
     def __getitem__(self, idx):
         img_name = os.path.join(self.data_dir, self.image_files[idx])
-        image = Image.open(img_name).convert('L')  # Převod na černobílý obrázek
-        # label = int(self.image_files[idx][-5])  # Extrahování labelu ze jména souboru
-        label = int(self.image_files[idx].split('_')[0])  # Extrahování labelu ze jména souboru
+        image = Image.open(img_name).convert('L')
+        label = int(self.image_files[idx].split('_')[0])
 
-        # one_hot_label = torch.zeros(2)
-        # one_hot_label[label] = 1
         if self.transform:
             image = self.transform(image)
         return image,label
@@ -39,18 +36,18 @@ class SimpleCNN(nn.Module):
         super(SimpleCNN, self).__init__()
         self.conv1 = nn.Conv2d(1, 16, kernel_size=3, stride=1, padding=1)
         self.conv2 = nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1)
-        self.fc1 = nn.Linear(32 * 10 * 5, 128)  # Přizpůsobeno velikosti výstupu z konvolučních vrstev
-        self.fc2 = nn.Linear(128, 2)  # Dvě třídy: steh, nebo ne steh
+        self.fc1 = nn.Linear(32 * 10 * 5, 128)
+        self.fc2 = nn.Linear(128, 2)  # steh-nesteh
 
     def forward(self, x):
         x = F.relu(self.conv1(x))
         x = F.max_pool2d(x, kernel_size=2, stride=2)
         x = F.relu(self.conv2(x))
         x = F.max_pool2d(x, kernel_size=2, stride=2)
-        x = x.view(-1, 32 * 10 * 5)  # Přizpůsobeno velikosti výstupu z konvolučních vrstev
+        x = x.view(-1, 32 * 10 * 5)
         x = F.relu(self.fc1(x))
         x = self.fc2(x)
-        x = F.softmax(x, dim=1)  # Pokus
+        x = F.softmax(x, dim=1)
         return x
 
 def validate_model(model, criterion, valid_loader):
@@ -101,9 +98,6 @@ def predict(model, img_stitchable, numm=0):
 
     img = Image.fromarray(img_stitchable)
     model.eval()
-    # Příprava vstupního obrázku k predikci
-    # image_path = 'image.jpg'
-    # image = Image.open(image_path).convert('L')
     img = transform(img).unsqueeze(0)  # Přidání dimenze batche
 
     with torch.no_grad():
@@ -190,22 +184,12 @@ def predict_single_image(skimage_image, model):
     pil_image = transform(skimage_image)
     image = pil_image.unsqueeze(0)
 
-    # print(image)
-
-    # Nastavení modelu do režimu vyhodnocování
     model.eval()
 
-    # S predikcí neprovádíme výpočet gradientů
     with torch.no_grad():
         # Provádíme predikci
         output = model(image)
 
-    # Získání indexu třídy s nejvyšší pravděpodobností
     predicted_class = torch.sigmoid(output).round().int().item()
-    # print(output)
-    # print("Predikce:", predicted_class)
-    # print("")
-    # Pokud máme víc než jednu třídu, můžeme použít:
-    # predicted_class = torch.argmax(output).item()
 
     return predicted_class

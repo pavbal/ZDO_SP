@@ -66,7 +66,6 @@ for epoch in range(num_epochs):
         optimizer.zero_grad()
         outputs = model(inputs)
 
-
         # print("inputs: ",inputs.shape)
         # print("outputs: ", outputs.shape)
         # print("labels: ", labels.shape)
@@ -112,15 +111,6 @@ accuracys_csv_arr = np.asarray(accuracys)
 
 np.savetxt(losses_csv, losses_csv_arr, delimiter=",")
 np.savetxt(accuracys_csv, accuracys_csv_arr, delimiter=",")
-
-# # Uložení seznamu do CSV souboru
-# with open(losses_csv, mode='w', newline='') as file:
-#     writer = csv.writer(file)
-#     writer.writerows(losses)
-
-# with open(accuracys_csv, mode='w', newline='') as file:
-#     writer = csv.writer(file)
-#     writer.writerows(accuracys)
 
 print('Finished Training')
 
